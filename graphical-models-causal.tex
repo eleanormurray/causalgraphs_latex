@@ -586,6 +586,45 @@ Code:
 \end{framed}
 
 \newpage
+\section{Annotating DAG arrows}
+When using DAGs for teaching biases such as confounding, it may sometimes be helpful to annotate the arrows to indicate the direction of bias as either positive or negative. The code adds labels or annotations to DAG arrows by placing a new text node above or below the midpoint of each arrow. 
+
+In the example below, the confounder $L$ is negatively associated with the outcome $Y$ and positively associated with the exposure $A$, leading to an expected negative (or downward) bias in the estimated association between $A$ and $Y$ if $L$ is not controlled for in the analysis. 
+
+\vspace{3mm}
+
+\begin{framed}
+\verb|DAG:|
+
+\begin{tikzpicture}
+ \node  (2) {L};
+ \node [right =of 2] (3) {A};
+ \node [right =of 3] (4) {Y};
+ 
+ \draw[Arrow] (2.east) -- (3.west) node[midway, below]{$+$};
+ \draw[Arrow] (2) to [out=25, in=160]  node[midway, above] {$-$} (4);
+ \draw[Arrow] (3.east) --(4.west) node[midway, below] {$-$};
+\end{tikzpicture}
+
+\begin{Verbatim}
+Code:
+
+\begin{tikzpicture}
+ \node (1) {L};
+ \node [right =of 1] (2) {A};
+ \node [right =of 2] (3) {Y};
+
+ \draw[Arrow] (2.east) -- (3.west) node[midway, below]{$+$};
+ \draw[Arrow] (2) to [out=25, in=160] node[midway, above]{$-$} (4) ;
+ \draw[Arrow] (3.east) --(4.west) node[midway, below] {$-$};
+\end{tikzpicture}
+
+\end{Verbatim}
+\end{framed}
+
+\vspace{3mm}
+
+\newpage
 
 \chapter{Single-world intervention graphs (SWIGs)}
 Single-world intervention graphs (SWIGs) are similar to DAGs in that they have the same key properties of being directed and acyclic. In addition, SWIGs explicitly include the intervention or experimental condition of interest and the counterfactual outcome of interest, allowing direct visual assessment of the causal inference assumption of exchangeability or conditional exchangeability.
