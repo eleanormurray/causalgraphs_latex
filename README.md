@@ -1,6 +1,6 @@
 # Graphical Models for Causal Inference using LaTeX 
 
-This repository contains a handbook for creating the most common types of graphical models used for teaching and thinking about causal inference using LaTeX. This file is available as a pdf handbook which contains explanations, examples, and sample code for creating grpahical models for causal inference in LaTeX. The souce .tex file for the handbook is also available in the repository. 
+This repository contains a handbook for creating the most common types of graphical models used for teaching and thinking about causal inference using LaTeX. This file is available as a pdf handbook which contains explanations, examples, and sample code for creating graphical models for causal inference in LaTeX. The souce .tex file for the handbook is also available in the repository. 
 
 These graphical models included in this handbook are:
 
