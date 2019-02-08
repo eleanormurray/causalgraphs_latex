@@ -8,5 +8,6 @@ These graphical models included in this handbook are:
 2. Single-world intervention graphs (SWIGs)
 3. Probability trees for inverse probability weighting
 4. Decision trees for Markov models.
+5. Path diagrams for Structural Equation Models (SEMs).
 
 This handbook was written by me based on LaTeX code I have developed over the past 6 years through a combination of trial and error, and extensive reading of questions and answers on Tex.StackExchange. I hope that the code here will be as helpful for others trying to draw their own graphical causal models as StackExchange has been for me. All suggestions for improvement are welcome and appreciated.  
