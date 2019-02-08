@@ -85,7 +85,7 @@ Create custom arrow style:
 		}, 
 	shorten >= 3pt, preaction = {decorate}
 	]
-	
+
 \vspace{3mm}	
 Your arrows will look like this:
 \begin{tikzpicture}[]
@@ -1796,6 +1796,473 @@ child{node[textbox]{Survive \\(${Y}_{k}=0$)}
 
 \end{Verbatim}
 \end{framed}
+
+
+\chapter{Path Diagrams for Structural Equation Models}
+Structural Equation Models (SEMs) are commonly used for causal inference in psychology, sociology, and social sciences. This class of models includes path analysis and confirmatory factor analysis. SEMs are generally designed to provide an overall analysis of a set of complex interrelationships rather than to estimate the specific causal effect of one variable on another. Another distinguishing features of SEMs is the use of latent variables to describe unmeasureable concepts that may be important.
+
+Structural equation models are generally visualized through the use of a path diagram. Path diagrams may look similar to DAGs but encode different information. 
+
+\section{Path diagram conventions}
+
+Path diagrams have four different types of nodes:
+\begin{itemize}
+    \item Observed variables: the exposure, covariate, and outcome information you have collected in your study. An example of an observed variable is measured score from the Short Form 36 (SF-36) Health Questionnaire. Observed nodes are enclosed in a rectangular box.
+    \item Latent variables: important unobserved, and typically unobservable, variables that you would like to know about and think are important but you don't have in your data. An example of a latent variable is Quality of Life, which is one of the constructs the SF-36 is hoping to measure but which cannot be directly observed. Latent nodes are enclosed in a circle or oval.
+    \item Error nodes: these represent other, unmeasured and/or unknown causes of the variables in your model, including randomness. These nodes are optional. Error nodes can be enclosed in a circle or oval or not enclosed.
+    \item Confounding node: in many published path diagrams, a node labeled 'Confounders' or 'Confounding' will be included to remind the reader than other unknown confounders may exist. This node is optional, and usually enclosed in a rectangular box.
+\end{itemize}
+
+\vspace{2em}
+Path diagrams also have three different types of arrows:
+\begin{itemize}
+    \item Solid arrows with single arrowheads: these arrows have the same meaning as an arrow in a DAG; they represent known or suspected causal effects from cause to effect in the direction of the arrow. 
+    \item Solid arrows with double arrowheads: these arrows are used when the covariance structure between two variables is important. This will often be because of unmeasured or unknown common causes of the two variables.
+    \item Dashed arrows with a single arrowhead: these arrows represent possible causal effects and are generally used to show variables which may have unknown relationships with unmeasured confounders.
+\end{itemize}
+
+\vspace{2em}
+Finally, path diagrams can also have annotations on the arrows:
+\begin{itemize}
+    \item Model output: after the model described by the path diagram has been analyzed the estimated associations may be included in the diagram as arrow annotations.
+    \item Model constraints: in some analyses, certain relationships will be constrained by design. For example, the covariance between two variables may be fixed at 0. These constraints may be added as arrow annotations.
+\end{itemize}
+
+\section{A path diagram using error nodes}
+The code below is a modified version of a path diagram that was used to analyze a structural equation model of worker and workplace factors in prolonged absence from work among nurses \cite{franche2011examining}.
+
+\vspace{3em}
+\begin{framed}
+
+\begin{tikzpicture}[
+    observed/.style = {rectangle, thick, text centered, draw, text width = 6em}, 
+    latent/.style = {ellipse, thick, draw, text centered, text width = 6em},
+    error/.style ={circle, thick, draw, text centered},
+    confounding/.style = {rectangle, thick, text centered, draw, text width = 6em, minimum width = 5.5in},
+    outcome/.style = {rectangle, thick, draw, text centered, minimum height = 3.5in, text width = 6em},
+    <-> /.tip =Latex, thick
+    ]
+    \node[observed] (age) at (0, 0) {Age};
+    \node[observed] (region) at (0,-1) {Region};
+    \node[observed] (aboriginal) at (0,-2) {Aboriginal status};
+    \node[observed] (income) at (0,-3) {Household income};
+    \node[observed] (marital) at (0,-4) {Martial status};
+    \node[observed] (role scale) at (0,-5) {Role overload scale};
+    \node[observed] (overtime) at (0,-6) {Unpaid overtime};
+    \node[observed] (insecurity) at (0,-7) {Job insecurity};
+    \node[observed] (employment) at (0,-8) {Employment status};
+
+    \node[error](e1) at (-2.5,0.5) {e1}; \draw[Arrow] (e1)--(age);
+    \node[error](e2) at (-2.5,-0.5) {e2}; \draw[Arrow] (e2) -- (region);
+    \node[error](e3) at (-2.5,-1.5) {e3}; \draw[Arrow] (e3) -- (aboriginal);
+    \node[error](e4) at (-2.5,-2.5) {e4}; \draw[Arrow] (e4) -- (income);
+    \node[error](e5) at (-2.5,-3.5) {e5}; \draw[Arrow] (e5) -- (marital);
+    \node[error](e6) at (-2.5,-4.5) {e6}; \draw[Arrow] (e6) -- (role scale);
+    \node[error](e7) at (-2.5,-5.5) {e7}; \draw[Arrow] (e7) -- (overtime);
+    \node[error](e8) at (-2.5,-6.5) {e8}; \draw[Arrow] (e8) -- (insecurity);
+    \node[error](e9) at (-2.5,-7.5) {e9}; \draw[Arrow] (e9) -- (employment);
+    
+    \node[observed, text width = 6.7em] (multimorbid) at (3.5,-2) {Multimorbidity};
+    \node[latent]   (role) at (3.5,-5.5) {Role overload};
+    \node[error](e10) at (4.5,-1) {e10}; \draw[Arrow] (e10) -- (multimorbid);
+    \node[error](e11) at (4.5,-6.5) {e11};\draw[Arrow](e11) --(role);
+    
+    \node[observed] (nonwork pain) at (7,-1) {Non-work-related pain severity};
+    \node[observed] (work pain) at (7,-3) {Work-related pain severity};
+    \node[observed] (depression) at (7,-4) {Depression};
+    \node[error](e12) at (9,0) {e12}; \draw[Arrow] (e12) -- (nonwork pain);
+    \node[error](e13) at (9,-2.5) {e13}; \draw[Arrow] (e13) -- (work pain);
+    \node[error](e14) at (8.5,-5) {e14}; \draw[Arrow] (e14) -- (depression);
+    
+    \node[outcome] (outcome) at (11,-4) {Prolonged work absences due to physical or mental health};
+
+    \draw[Arrow] (age.east)--(multimorbid.west);
+    \draw[Arrow] (region.east)--(multimorbid.west);
+    \draw[Arrow] (aboriginal.east)--(multimorbid.west);
+    \draw[Arrow] (income.east)--(multimorbid.west);
+    
+    \draw[Arrow] (income.east)--(depression.west);
+    \draw[Arrow] (marital.east)--(depression.west);
+    \draw[<->] (income) to [out=-180, in=-180](marital);
+    
+    \draw[Arrow] (multimorbid.east)--(nonwork pain.west);
+    \draw[Arrow] (multimorbid.east)--(work pain.west);
+    \draw[Arrow] (multimorbid)--(9.8, -2);
+    
+    \draw[Arrow] (role.west)--(role scale.east);
+    \draw[Arrow] (role.west)--(overtime);
+    \draw[Arrow] (role.east)-- (9.8, -5.5);
+    
+    \draw[Arrow] (insecurity.east)--(role.south);
+    \draw[Arrow] (employment.east)--(role.south);
+    
+    \draw[Arrow] (employment.east)--(9.8, -8);
+
+    \draw[Arrow] (nonwork pain)--(9.8, -1);
+    \draw[Arrow] (work pain)--(9.8, -3);
+    \draw[Arrow] (depression)--(9.8, -4);
+
+\end{tikzpicture}
+\end{framed}
+
+\begin{framed}
+
+\begin{Verbatim}
+
+\begin{tikzpicture}[
+    observed/.style = {rectangle, thick, text centered, draw, text width = 6em}, 
+    latent/.style = {ellipse, thick, draw, text centered, text width = 6em},
+    error/.style ={circle, thick, draw, text centered},
+    confounding/.style = {rectangle, thick, text centered, draw, text width = 6em, 
+        minimum width = 5.5in},
+    outcome/.style = {rectangle, thick, draw, text centered, minimum height = 3.5in,
+        text width = 6em},
+    <-> /.tip =Latex, thick
+    ]
+    \node[observed] (age) at (0, 0) {Age};
+    \node[observed] (region) at (0,-1) {Region};
+    \node[observed] (aboriginal) at (0,-2) {Aboriginal status};
+    \node[observed] (income) at (0,-3) {Household income};
+    \node[observed] (marital) at (0,-4) {Martial status};
+    \node[observed] (role scale) at (0,-5) {Role overload scale};
+    \node[observed] (overtime) at (0,-6) {Unpaid overtime};
+    \node[observed] (insecurity) at (0,-7) {Job insecurity};
+    \node[observed] (employment) at (0,-8) {Employment status};
+
+    \node[error](e1) at (-2.5,0.5) {e1}; \draw[Arrow] (e1)--(age);
+    \node[error](e2) at (-2.5,-0.5) {e2}; \draw[Arrow] (e2) -- (region);
+    \node[error](e3) at (-2.5,-1.5) {e3}; \draw[Arrow] (e3) -- (aboriginal);
+    \node[error](e4) at (-2.5,-2.5) {e4}; \draw[Arrow] (e4) -- (income);
+    \node[error](e5) at (-2.5,-3.5) {e5}; \draw[Arrow] (e5) -- (marital);
+    \node[error](e6) at (-2.5,-4.5) {e6}; \draw[Arrow] (e6) -- (role scale);
+    \node[error](e7) at (-2.5,-5.5) {e7}; \draw[Arrow] (e7) -- (overtime);
+    \node[error](e8) at (-2.5,-6.5) {e8}; \draw[Arrow] (e8) -- (insecurity);
+    \node[error](e9) at (-2.5,-7.5) {e9}; \draw[Arrow] (e9) -- (employment);
+    
+    \node[observed, text width = 6.7em] (multimorbid) at (3.5,-2) {Multimorbidity};
+    \node[latent]   (role) at (3.5,-5.5) {Role overload};
+    \node[error](e10) at (4.5,-1) {e10}; \draw[Arrow] (e10) -- (multimorbid);
+    \node[error](e11) at (4.5,-6.5) {e11};\draw[Arrow](e11) --(role);
+    
+    \node[observed] (nonwork pain) at (7,-1) {Non-work-related pain severity};
+    \node[observed] (work pain) at (7,-3) {Work-related pain severity};
+    \node[observed] (depression) at (7,-4) {Depression};
+    \node[error](e12) at (9,0) {e12}; \draw[Arrow] (e12) -- (nonwork pain);
+    \node[error](e13) at (9,-2.5) {e13}; \draw[Arrow] (e13) -- (work pain);
+    \node[error](e14) at (8.5,-5) {e14}; \draw[Arrow] (e14) -- (depression);
+    
+    \node[outcome] (outcome) at (11,-4) 
+            {Prolonged work absences due to physical or mental health};
+    
+    \draw[Arrow] (age.east)--(multimorbid.west);
+    \draw[Arrow] (region.east)--(multimorbid.west);
+    \draw[Arrow] (aboriginal.east)--(multimorbid.west);
+    \draw[Arrow] (income.east)--(multimorbid.west);
+    
+    \draw[Arrow] (income.east)--(depression.west);
+    \draw[Arrow] (marital.east)--(depression.west);
+    \draw[<->] (income) to [out=-180, in=-180](marital);
+    
+    \draw[Arrow] (multimorbid.east)--(nonwork pain.west);
+    \draw[Arrow] (multimorbid.east)--(work pain.west);
+    \draw[Arrow] (multimorbid)--(9.8, -2);
+    
+    \draw[Arrow] (role.west)--(role scale.east);
+    \draw[Arrow] (role.west)--(overtime);
+    \draw[Arrow] (role.east)-- (9.8, -5.5);
+    
+    \draw[Arrow] (insecurity.east)--(role.south);
+    \draw[Arrow] (employment.east)--(role.south);
+    
+    \draw[Arrow] (employment.east)--(9.8, -8);
+    
+    \draw[Arrow] (nonwork pain)--(9.8, -1);
+    \draw[Arrow] (work pain)--(9.8, -3);
+    \draw[Arrow] (depression)--(9.8, -4);
+
+\end{tikzpicture}
+
+\end{Verbatim}
+\end{framed}
+
+\section{A path diagram using a confounding node}
+As alternative that simplifies the visual presentation, many path diagrams include a confounding node and omit the error nodes. The code below uses this simplified presentation.
+
+\vspace{3em}
+
+\begin{framed}
+
+\begin{tikzpicture}[
+    observed/.style = {rectangle, thick, text centered, draw, text width = 6em}, 
+    latent/.style = {ellipse, thick, draw, text centered, text width = 6em},
+    error/.style ={circle, thick, draw, text centered},
+    confounding/.style = {rectangle, thick, text centered, draw, text width = 6em, 
+        minimum width = 5.5in},
+    outcome/.style = {rectangle, thick, draw, text centered, 
+        minimum height = 3.5in, text width = 6em},
+    <-> /.tip =Latex, thick
+    ]
+    \node[observed] (age) at (0, 0) {Age};
+    \node[observed] (region) at (0,-1) {Region};
+    \node[observed] (aboriginal) at (0,-2) {Aboriginal status};
+    \node[observed] (income) at (0,-3) {Household income};
+    \node[observed] (marital) at (0,-4) {Martial status};
+    \node[observed] (role scale) at (0,-5) {Role overload scale};
+    \node[observed] (overtime) at (0,-6) {Unpaid overtime};
+    \node[observed] (insecurity) at (0,-7) {Job insecurity};
+    \node[observed] (employment) at (0,-8) {Employment status};
+
+    \node[observed, text width = 6.7em] (multimorbid) at (3.5,-2) {Multimorbidity};
+    \node[latent]   (role) at (3.5,-5.5) {Role overload};
+
+    \node[observed] (nonwork pain) at (7,-1) {Non-work-related pain severity};
+    \node[observed] (work pain) at (7,-3) {Work-related pain severity};
+    \node[observed] (depression) at (7,-4) {Depression};
+
+    \node[outcome] (outcome) at (11,-4) 
+        {Prolonged work absences due to physical or mental health};
+    
+    \node[confounding](conf) at (5.2,1.5) {Unmeasured confounders};
+    
+    \draw[Arrow] (age.east)--(multimorbid.west);
+    \draw[Arrow] (region.east)--(multimorbid.west);
+    \draw[Arrow] (aboriginal.east)--(multimorbid.west);
+    \draw[Arrow] (income.east)--(multimorbid.west);
+    
+    \draw[Arrow] (income.east)--(depression.west);
+    \draw[Arrow] (marital.east)--(depression.west);
+    \draw[<->] (income) to [out=-180, in=-180](marital);
+    
+    \draw[Arrow] (multimorbid.east)--(nonwork pain.west);
+    \draw[Arrow] (multimorbid.east)--(work pain.west);
+    \draw[Arrow] (multimorbid)--(9.8, -2);
+    
+    \draw[Arrow] (role.west)--(role scale.east);
+    \draw[Arrow] (role.west)--(overtime);
+    \draw[Arrow] (role.east)-- (9.8, -5.5);
+    
+    \draw[Arrow] (insecurity.east)--(role.south);
+    \draw[Arrow] (employment.east)--(role.south);
+    
+    \draw[Arrow] (employment.east)--(9.8, -8);
+
+    \draw[Arrow, dashed](0, 1.25)--(0, 0.25);
+    \draw[Arrow, dashed](3, 1.25)--(3, 0.25);
+    \draw[Arrow, dashed](7, 1.25)--(7, 0.25);
+    \draw[Arrow, dashed](11, 1.25)--(11, 0.5);
+    
+    \draw[Arrow] (nonwork pain)--(9.8, -1);
+    \draw[Arrow] (work pain)--(9.8, -3);
+    \draw[Arrow] (depression)--(9.8, -4);
+    
+\end{tikzpicture}
+\end{framed}
+
+\begin{framed}
+
+\begin{Verbatim}
+
+\begin{tikzpicture}[
+    observed/.style = {rectangle, thick, text centered, draw, text width = 6em}, 
+    latent/.style = {ellipse, thick, draw, text centered, text width = 6em},
+    error/.style ={circle, thick, draw, text centered},
+    confounding/.style = {rectangle, thick, text centered, draw, text width = 6em, 
+        minimum width = 5.5in},
+    outcome/.style = {rectangle, thick, draw, text centered, 
+        minimum height = 3.5in, text width = 6em},
+    <-> /.tip =Latex, thick
+    ]
+    \node[observed] (age) at (0, 0) {Age};
+    \node[observed] (region) at (0,-1) {Region};
+    \node[observed] (aboriginal) at (0,-2) {Aboriginal status};
+    \node[observed] (income) at (0,-3) {Household income};
+    \node[observed] (marital) at (0,-4) {Martial status};
+    \node[observed] (role scale) at (0,-5) {Role overload scale};
+    \node[observed] (overtime) at (0,-6) {Unpaid overtime};
+    \node[observed] (insecurity) at (0,-7) {Job insecurity};
+    \node[observed] (employment) at (0,-8) {Employment status};
+
+    \node[observed, text width = 6.7em] (multimorbid) at (3.5,-2) {Multimorbidity};
+    \node[latent]   (role) at (3.5,-5.5) {Role overload};
+
+    \node[observed] (nonwork pain) at (7,-1) {Non-work-related pain severity};
+    \node[observed] (work pain) at (7,-3) {Work-related pain severity};
+    \node[observed] (depression) at (7,-4) {Depression};
+
+    \node[outcome] (outcome) at (11,-4) 
+        {Prolonged work absences due to physical or mental health};
+    
+    \node[confounding](conf) at (5.2,1.5) {Unmeasured confounders};
+    
+    \draw[Arrow] (age.east)--(multimorbid.west);
+    \draw[Arrow] (region.east)--(multimorbid.west);
+    \draw[Arrow] (aboriginal.east)--(multimorbid.west);
+    \draw[Arrow] (income.east)--(multimorbid.west);
+    
+    \draw[Arrow] (income.east)--(depression.west);
+    \draw[Arrow] (marital.east)--(depression.west);
+    \draw[<->] (income) to [out=-180, in=-180](marital);
+    
+    \draw[Arrow] (multimorbid.east)--(nonwork pain.west);
+    \draw[Arrow] (multimorbid.east)--(work pain.west);
+    \draw[Arrow] (multimorbid)--(9.8, -2);
+    
+    \draw[Arrow] (role.west)--(role scale.east);
+    \draw[Arrow] (role.west)--(overtime);
+    \draw[Arrow] (role.east)-- (9.8, -5.5);
+    
+    \draw[Arrow] (insecurity.east)--(role.south);
+    \draw[Arrow] (employment.east)--(role.south);
+    
+    \draw[Arrow] (employment.east)--(9.8, -8);
+
+    \draw[Arrow, dashed](0, 1.25)--(0, 0.25);
+    \draw[Arrow, dashed](3, 1.25)--(3, 0.25);
+    \draw[Arrow, dashed](7, 1.25)--(7, 0.25);
+    \draw[Arrow, dashed](11, 1.25)--(11, 0.5);
+ 
+    \draw[Arrow] (nonwork pain)--(9.8, -1);
+    \draw[Arrow] (work pain)--(9.8, -3);
+    \draw[Arrow] (depression)--(9.8, -4);   
+\end{tikzpicture}
+
+\end{Verbatim}
+\end{framed}
+
+
+\section{An annotated path diagram}
+Finally, we can annotate the arrows of the path diagram to display either our model estimates or our model constraints. The annotations in the example below are standardized regression coefficients taken from a published model but should not be used for decision-making since the published model had more model components \cite{franche2011examining}.
+
+\vspace{3em}
+\begin{framed}
+
+\begin{tikzpicture}[
+    observed/.style = {rectangle, thick, text centered, draw, text width = 6em}, 
+    latent/.style = {ellipse, thick, draw, text centered, text width = 6em},
+    error/.style ={circle, thick, draw, text centered},
+    confounding/.style = {rectangle, thick, text centered, draw, text width = 6em, 
+        minimum width = 5.5in},
+    outcome/.style = {rectangle, thick, draw, text centered, 
+        minimum height = 3.5in, text width = 6em},
+    <-> /.tip =Latex, thick
+    ]
+    \node[observed] (age) at (0, -1) {Age};
+    \node[observed] (income) at (0,-2.5) {Household income};
+    \node[observed] (marital) at (0,-4) {Martial status};
+    \node[observed] (role scale) at (0,-5) {Role overload scale};
+    \node[observed] (overtime) at (0,-6) {Unpaid overtime};
+    \node[observed] (insecurity) at (0,-7) {Job insecurity};
+    \node[observed] (employment) at (0,-8) {Employment status};
+
+    \node[observed, text width = 6.7em] (multimorbid) at (3.5,-2) {Multimorbidity};
+    \node[latent]   (role) at (3.5,-5.5) {Role overload};
+
+    \node[observed] (nonwork pain) at (7,-1) {Non-work-related pain severity};
+    \node[observed] (work pain) at (7,-3) {Work-related pain severity};
+    \node[observed] (depression) at (7,-4) {Depression};
+
+    \node[outcome] (outcome) at (11,-4) 
+        {Prolonged work absences due to physical or mental health};
+    
+    \node[confounding](conf) at (5.2,1.5) {Unmeasured confounders};
+    
+    \draw[Arrow] (age.east)--node[midway, right] {0.2}(multimorbid.west);
+    \draw[Arrow] (income.east)--node[midway, above] {-0.1}(multimorbid.west);
+    
+    \draw[Arrow] (marital.east)--node[midway, above] {0.04} (depression.west);
+    
+    \draw[Arrow] (multimorbid.east)--(nonwork pain.west);
+    \draw[Arrow] (multimorbid.east)--node[midway,left] {0.5} (work pain.west);
+
+    \draw[Arrow] (role.west)--(role scale.east);
+    \draw[Arrow] (role.west)--(overtime);
+    \draw[Arrow] (role.east)--node[midway,above] {0.7} (9.8, -5.5);
+    
+    \draw[Arrow] (insecurity.east)--node[midway, below right] {-0.2} (role.south);
+
+    \draw[Arrow] (employment.east)--node[midway, above] {-0.1} (9.8, -8);
+
+    \draw[Arrow, dashed](0, 1.25)--(0, 0.25);
+    \draw[Arrow, dashed](3, 1.25)--(3, 0.25);
+    \draw[Arrow, dashed](7, 1.25)--(7, 0.25);
+    \draw[Arrow, dashed](11, 1.25)--(11, 0.5);
+    
+    \draw[Arrow] (nonwork pain)--node[midway, above] {0.1} (9.8, -1);
+    \draw[Arrow] (work pain)--node[midway,above] {0.8} (9.8, -3);
+    \draw[Arrow] (depression)--node[midway, above] {0.3} (9.8, -4);
+    
+\end{tikzpicture}
+\end{framed}
+
+\begin{framed}
+
+\begin{Verbatim}
+\begin{tikzpicture}[
+    observed/.style = {rectangle, thick, text centered, draw, text width = 6em}, 
+    latent/.style = {ellipse, thick, draw, text centered, text width = 6em},
+    error/.style ={circle, thick, draw, text centered},
+    confounding/.style = {rectangle, thick, text centered, draw, text width = 6em, 
+        minimum width = 5.5in},
+    outcome/.style = {rectangle, thick, draw, text centered, 
+        minimum height = 3.5in, text width = 6em},
+    <-> /.tip =Latex, thick
+    ]
+    \node[observed] (age) at (0, -1) {Age};
+    \node[observed] (income) at (0,-2.5) {Household income};
+    \node[observed] (marital) at (0,-4) {Martial status};
+    \node[observed] (role scale) at (0,-5) {Role overload scale};
+    \node[observed] (overtime) at (0,-6) {Unpaid overtime};
+    \node[observed] (insecurity) at (0,-7) {Job insecurity};
+    \node[observed] (employment) at (0,-8) {Employment status};
+
+    \node[observed, text width = 6.7em] (multimorbid) at (3.5,-2) {Multimorbidity};
+    \node[latent]   (role) at (3.5,-5.5) {Role overload};
+
+    \node[observed] (nonwork pain) at (7,-1) {Non-work-related pain severity};
+    \node[observed] (work pain) at (7,-3) {Work-related pain severity};
+    \node[observed] (depression) at (7,-4) {Depression};
+
+    \node[outcome] (outcome) at (11,-4) 
+        {Prolonged work absences due to physical or mental health};
+    
+    \node[confounding](conf) at (5.2,1.5) {Unmeasured confounders};
+    
+    \draw[Arrow] (age.east)--node[midway, right] {0.2}(multimorbid.west);
+    \draw[Arrow] (income.east)--node[midway, above] {-0.1}(multimorbid.west);
+    
+    \draw[Arrow] (marital.east)--node[midway, above] {0.04} (depression.west);
+    
+    \draw[Arrow] (multimorbid.east)--(nonwork pain.west);
+    \draw[Arrow] (multimorbid.east)--node[midway,left] {0.5} (work pain.west);
+
+    \draw[Arrow] (role.west)--(role scale.east);
+    \draw[Arrow] (role.west)--(overtime);
+    \draw[Arrow] (role.east)--node[midway,above] {0.7} (9.8, -5.5);
+    
+    \draw[Arrow] (insecurity.east)--node[midway, below right] {-0.2} (role.south);
+
+    \draw[Arrow] (employment.east)--node[midway, above] {-0.1} (9.8, -8);
+
+    \draw[Arrow, dashed](0, 1.25)--(0, 0.25);
+    \draw[Arrow, dashed](3, 1.25)--(3, 0.25);
+    \draw[Arrow, dashed](7, 1.25)--(7, 0.25);
+    \draw[Arrow, dashed](11, 1.25)--(11, 0.5);
+    
+    \draw[Arrow] (nonwork pain)--node[midway, above] {0.1} (9.8, -1);
+    \draw[Arrow] (work pain)--node[midway,above] {0.8} (9.8, -3);
+    \draw[Arrow] (depression)--node[midway, above] {0.3} (9.8, -4);
+    
+\end{tikzpicture}
+
+
+\end{Verbatim}
+\end{framed}
+
+
+\bibliographystyle{plain}
+\bibliography{bibliography.bib}
+
+
 
 \end{document}
 
